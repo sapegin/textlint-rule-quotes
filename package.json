@@ -1,6 +1,6 @@
 {
 	"name": "textlint-rule-quotes",
-	"version": "0.0.0-development",
+	"version": "0.0.0",
 	"description": "Textlint rule to check correct usage of quotes",
 	"author": {
 		"name": "Artem Sapegin",

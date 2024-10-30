@@ -6,6 +6,8 @@
 
 ![textlint-rule-quotes](images/screenshot.png)
 
+[![Washing your code. A book on clean code for frontend developers](https://sapegin.me/images/washing-code-github.jpg)](https://sapegin.me/book/)
+
 ## Installation
 
 First, install from npm:

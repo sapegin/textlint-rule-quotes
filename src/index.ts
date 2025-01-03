@@ -1,25 +1,33 @@
+import type { TxtNode } from '@textlint/ast-node-types';
+import type {
+	TextlintFixableRuleModule,
+	TextlintRuleContext,
+} from '@textlint/types';
+
 const evilQuotesRegExp = /("?\w+"|"\w+)/g;
 const goodQuoteOpen = '“';
 const goodQuoteClose = '”';
 
-function getReplacement(text) {
-	return text.replace(/"(?=\w)/, goodQuoteOpen).replace(/"/g, goodQuoteClose);
+function getReplacement(text: string) {
+	return text.replace(/"(?=\w)/, goodQuoteOpen).replaceAll('"', goodQuoteClose);
 }
 
-function reporter(context) {
+function reporter(context: TextlintRuleContext) {
 	const { Syntax, RuleError, report, fixer, getSource } = context;
 	return {
-		[Syntax.Str](node) {
-			return new Promise((resolve) => {
+		[Syntax.Str](node: TxtNode) {
+			return new Promise<void>((resolve) => {
 				const text = getSource(node);
 
-				let match;
+				let match: RegExpExecArray | null;
 				while ((match = evilQuotesRegExp.exec(text))) {
 					const index = match.index;
 					const matched = match[0];
 					const replacement = getReplacement(matched);
-					const range = [index, index + matched.length];
-					const fix = fixer.replaceTextRange(range, replacement);
+					const fix = fixer.replaceTextRange(
+						[index, index + matched.length],
+						replacement
+					);
 					const message = `Incorrect quote used: \`${matched}\`, use \`${replacement}\` instead`;
 					report(
 						node,
@@ -36,7 +44,9 @@ function reporter(context) {
 	};
 }
 
-module.exports = {
+const rule: TextlintFixableRuleModule = {
 	linter: reporter,
 	fixer: reporter,
 };
+
+export default rule;
